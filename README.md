@@ -1,1 +1,3 @@
-# nvim
+# Nvim config
+A basic Kickstart nvim config.
+
