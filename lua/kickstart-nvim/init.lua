@@ -195,6 +195,7 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "[p]roject [v]iew" })
 vim.keymap.set("n", "<leader>tt", ":tabnew .<CR>", { desc = "[t]abnew" })
 vim.keymap.set("n", "<leader>tc", ":tabclose<CR>", { desc = "[t]ab [c]lose" })
 vim.keymap.set("i", "<C-M>", "<Down>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<C-B>", ":vert term<CR>", { desc = "Open a new Vertical Window Terminal" })
 -- vim.keymap.set("n", "shift")
 --  See `:help lua-guide-autocommands`
 
