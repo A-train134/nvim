@@ -198,8 +198,12 @@ vim.keymap.set("i", "<C-M>", "<Down>", { desc = "Move focus to the upper window"
 vim.keymap.set("n", "<C-B>", ":vert term<CR>", { desc = "Open a new Vertical Window Terminal" })
 vim.keymap.set("i", "<C-BS>", "db", { desc = "Ctrl backspace" })
 -- vim.keymap.set("n", "shift")
+--
+-- Vim Fugitive
+vim.keymap.set("n", "<leader>gs", ":Git<cr>", { desc = "Git status" })
+vim.keymap.set("n", "<leader>gc", ":Git commit<cr>", { desc = "Git commit" })
+--
 --  See `:help lua-guide-autocommands`
-
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua`", "*.swift" },
 	callback = function()
@@ -1047,6 +1051,18 @@ require("lazy").setup({
 			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 		end,
 	},
+	{
+		"OXY2DEV/markview.nvim",
+		lazy = false,
+		config = function()
+			require("markview").setup({
+				preview = {
+					icon_provider = "mini",
+				},
+			})
+		end,
+	},
+	{ "tpope/vim-fugitive", cmd = { "Git", "G", "Ggrep", "Gdiffsplit", "Gread" } },
 
 	-- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
 	-- init.lua. If you want these files, they are in the repository, so you can just download them and
