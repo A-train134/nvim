@@ -1010,21 +1010,22 @@ require("lazy").setup({
 		branch = "main",
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
 		config = function()
-			local parsers = {
-				"bash",
-				"c",
-				"diff",
-				"html",
-				"lua",
-				"luadoc",
-				"markdown",
-				"markdown_inline",
-				"query",
-				"vim",
-				"vimdoc",
-				"python",
-			}
-			require("nvim-treesitter").install(parsers)
+			local parsers =
+				{
+					"bash",
+					"c",
+					"cpp",
+					"diff",
+					"html",
+					"lua",
+					"luadoc",
+					"markdown",
+					"markdown_inline",
+					"query",
+					"vim",
+					"vimdoc",
+					"python",
+				}, require("nvim-treesitter").install(parsers)
 			vim.api.nvim_create_autocmd("FileType", {
 				callback = function(args)
 					local buf, filetype = args.buf, args.match
@@ -1052,7 +1053,6 @@ require("lazy").setup({
 			})
 		end,
 	},
-	-- { -- Highlight, edit, and navigate code
 	-- 	"nvim-treesitter/nvim-treesitter",
 	-- 	build = ":TSUpdate",
 	-- 	main = "nvim-treesitter.configs", -- Sets main module to use for opts
