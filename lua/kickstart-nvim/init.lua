@@ -198,9 +198,15 @@ vim.keymap.set("n", "<C-T>", ":lcd %:p:h | vert terminal<CR>", { desc = "Open a 
 -- vim.keymap.set("i", "<C-M>", "<Down>", { desc = "Move focus to the upper window" })
 vim.keymap.set("i", "<C-BS>", "db", { desc = "Ctrl backspace" })
 vim.keymap.set("n", "<leader>bl", function()
+  vim.cmd("w")
   vim.cmd("split | terminal ./build.sh")
   vim.cmd("startinsert")
 end, { desc = "Open a vertical window and run build.sh" })
+vim.keymap.set("n", "<leader>bo", function()
+  vim.cmd("w")
+  vim.cmd("split | terminal odin run .")
+  vim.cmd("startinsert")
+end, { desc = "Open a vertical window and run odin run ." })
 -- vim.keymap.set("n", "shift")
 --
 -- Vim Fugitive
@@ -209,7 +215,7 @@ vim.keymap.set("n", "<leader>gc", ":Git commit<cr>", { desc = "Git commit" })
 --
 --  See `:help lua-guide-autocommands`
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-  pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua`", "*.swift" },
+  pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua`", "*.swift", "*.odin" },
   callback = function()
     vim.opt_local.shiftwidth = 4
     vim.opt_local.tabstop = 4
