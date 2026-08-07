@@ -195,8 +195,18 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "[p]roject [v]iew" })
 vim.keymap.set("n", "<leader>tt", ":tabnew .<CR>", { desc = "[t]abnew" })
 vim.keymap.set("n", "<leader>tc", ":tabclose<CR>", { desc = "[t]ab [c]lose" })
 vim.keymap.set("n", "<C-T>", ":lcd %:p:h | vert terminal<CR>", { desc = "Open a new Vertical Window Terminal" })
-vim.keymap.set("i", "<C-M>", "<Down>", { desc = "Move focus to the upper window" })
+-- vim.keymap.set("i", "<C-M>", "<Down>", { desc = "Move focus to the upper window" })
 vim.keymap.set("i", "<C-BS>", "db", { desc = "Ctrl backspace" })
+vim.keymap.set("n", "<leader>bl", function()
+	vim.cmd("w")
+	vim.cmd("split | terminal ./build.sh")
+	vim.cmd("startinsert")
+end, { desc = "Open a vertical window and run build.sh" })
+vim.keymap.set("n", "<leader>bo", function()
+	vim.cmd("w")
+	vim.cmd("split | terminal odin run .")
+	vim.cmd("startinsert")
+end, { desc = "Open a vertical window and run odin run ." })
 -- vim.keymap.set("n", "shift")
 --
 -- Vim Fugitive
@@ -205,7 +215,7 @@ vim.keymap.set("n", "<leader>gc", ":Git commit<cr>", { desc = "Git commit" })
 --
 --  See `:help lua-guide-autocommands`
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua`", "*.swift" },
+	pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua`", "*.swift", "*.odin" },
 	callback = function()
 		vim.opt_local.shiftwidth = 4
 		vim.opt_local.tabstop = 4
@@ -365,7 +375,8 @@ require("lazy").setup({
 	{ -- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
 		event = "VimEnter",
-		branch = "0.1.x",
+		-- branch = "0.1.x",
+		tag = "v0.2.0",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{ -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -597,6 +608,7 @@ require("lazy").setup({
 					-- WARN: This is not Goto Definition, this is Goto Declaration.
 					--  For example, in C this would take you to the header.
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+					map("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
 
 					-- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
 					---@param client vim.lsp.Client
@@ -731,6 +743,12 @@ require("lazy").setup({
 						Lua = {
 							completion = {
 								callSnippet = "Replace",
+							},
+							diagnostics = {
+								globals = {
+									"vim",
+									"require",
+								},
 							},
 							-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
 							-- diagnostics = { disable = { 'missing-fields' } },
