@@ -44,7 +44,11 @@ vim.keymap.set("n", "<C-T>", ":lcd %:p:h | vert terminal<CR>", { desc = "Open a 
 vim.keymap.set("i", "<C-BS>", "db", { desc = "Ctrl backspace" })
 vim.keymap.set("n", "<leader>bl", function()
 	vim.cmd("w")
-	vim.cmd("split | terminal ./build.sh")
+	if vim.fn.has("win32") then
+		vim.cmd("split | terminal build.bat")
+	else
+		vim.cmd("split | terminal ./build.sh")
+	end
 	vim.cmd("startinsert")
 end, { desc = "Open a vertical window and run build.sh" })
 vim.keymap.set("n", "<leader>bo", function()
@@ -52,6 +56,9 @@ vim.keymap.set("n", "<leader>bo", function()
 	vim.cmd("split | terminal odin run .")
 	vim.cmd("startinsert")
 end, { desc = "Open a vertical window and run odin run ." })
+if vim.fn.has("win32") then
+	vim.o.shell = "powershell"
+end
 -- Vim Fugitive
 vim.keymap.set("n", "<leader>gs", ":Git<cr>", { desc = "Git status" })
 vim.keymap.set("n", "<leader>gc", ":Git commit<cr>", { desc = "Git commit" })
@@ -241,6 +248,31 @@ require("lazy").setup({
 				end,
 				group = swift_lsp,
 			})
+			-- ATRAIN TS_LS
+			local ts_lsp = vim.api.nvim_create_augroup("ts_lsp", { clear = true })
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+				callback = function()
+					local root_dir = vim.fs.dirname(
+						vim.fs.find({ "package.json", "bun.lock", "bun.lockb", ".git" }, { upward = true })[1]
+					)
+					local client = vim.lsp.start({
+						name = "ts_ls",
+						cmd = {
+							"bun",
+							"x",
+							"tsc",
+							-- "typescript-language-server",
+							"--lsp",
+							"--stdio",
+						},
+						root_dir = root_dir,
+					})
+					vim.lsp.buf_attach_client(0, client)
+				end,
+				group = ts_lsp,
+			})
+
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 				callback = function(event)
