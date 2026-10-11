@@ -45,7 +45,7 @@ vim.keymap.set("i", "<C-BS>", "db", { desc = "Ctrl backspace" })
 vim.keymap.set("n", "<leader>bl", function()
 	vim.cmd("w")
 	if vim.fn.has("win32") then
-		vim.cmd("split | terminal build.bat")
+		vim.cmd("split | terminal cmd.exe /c build.bat")
 	else
 		vim.cmd("split | terminal ./build.sh")
 	end
@@ -56,8 +56,11 @@ vim.keymap.set("n", "<leader>bo", function()
 	vim.cmd("split | terminal odin run .")
 	vim.cmd("startinsert")
 end, { desc = "Open a vertical window and run odin run ." })
-if vim.fn.has("win32") then
-	vim.o.shell = "powershell"
+if vim.fn.has("win32") == 1 then
+	vim.opt.shell = "powershell.exe"
+	vim.opt.shellcmdflag = "-NoLogo -NoProfile -Command"
+	vim.opt.shellquote = '"'
+	vim.opt.shellxquote = ""
 end
 -- Vim Fugitive
 vim.keymap.set("n", "<leader>gs", ":Git<cr>", { desc = "Git status" })
