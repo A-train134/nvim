@@ -68,7 +68,7 @@ vim.keymap.set("n", "<leader>gc", ":Git commit<cr>", { desc = "Git commit" })
 -- AutoCommands
 --
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua`", "*.swift", "*.odin" },
+	pattern = { "*.c", "*.h", "*.cpp", "*.html", "*.js", "*.conf", "*.json", "*.lua", "*.swift", "*.odin", "*.go", "*.css" },
 	callback = function()
 		vim.opt_local.shiftwidth = 4
 		vim.opt_local.tabstop = 4
@@ -106,7 +106,7 @@ require("lazy").setup({
 			},
 		},
 	},
-	{ -- Useful plugin to show you pending keybinds.
+	{                 -- Useful plugin to show you pending keybinds.
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
 		opts = {
@@ -145,7 +145,7 @@ require("lazy").setup({
 				},
 			},
 			spec = {
-				{ "<leader>c", group = "[C]ode", mode = { "n", "x" } },
+				{ "<leader>c", group = "[C]ode",     mode = { "n", "x" } },
 				{ "<leader>d", group = "[D]ocument" },
 				{ "<leader>r", group = "[R]ename" },
 				{ "<leader>s", group = "[S]earch" },
@@ -169,7 +169,7 @@ require("lazy").setup({
 				end,
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
-			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+			{ "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
 		},
 		config = function()
 			-- See `:help telescope` and `:help telescope.setup()`
@@ -192,7 +192,8 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
 			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
 			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+			vim.keymap.set("n", "<leader>s.", builtin.oldfiles,
+				{ desc = '[S]earch Recent Files ("." for repeat)' })
 			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 			-- Slightly advanced example of overriding default behavior and theme
 			vim.keymap.set("n", "<leader>/", function()
@@ -230,7 +231,7 @@ require("lazy").setup({
 			{ "williamboman/mason.nvim", opts = {} },
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
-			{ "j-hui/fidget.nvim", opts = {} },
+			{ "j-hui/fidget.nvim",       opts = {} },
 			"hrsh7th/cmp-nvim-lsp",
 		},
 		config = function()
@@ -281,13 +282,17 @@ require("lazy").setup({
 				callback = function(event)
 					local map = function(keys, func, desc, mode)
 						mode = mode or "n"
-						vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+						vim.keymap.set(mode, keys, func,
+							{ buffer = event.buf, desc = "LSP: " .. desc })
 					end
 					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 					map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-					map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-					map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-					map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+					map("gI", require("telescope.builtin").lsp_implementations,
+						"[G]oto [I]mplementation")
+					map("<leader>D", require("telescope.builtin").lsp_type_definitions,
+						"Type [D]efinition")
+					map("<leader>ds", require("telescope.builtin").lsp_document_symbols,
+						"[D]ocument [S]ymbols")
 					map(
 						"<leader>ws",
 						require("telescope.builtin").lsp_dynamic_workspace_symbols,
@@ -321,7 +326,8 @@ require("lazy").setup({
 						)
 					then
 						local highlight_augroup =
-							vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+							vim.api.nvim_create_augroup("kickstart-lsp-highlight",
+								{ clear = false })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
 							group = highlight_augroup,
@@ -333,10 +339,15 @@ require("lazy").setup({
 							callback = vim.lsp.buf.clear_references,
 						})
 						vim.api.nvim_create_autocmd("LspDetach", {
-							group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+							group = vim.api.nvim_create_augroup("kickstart-lsp-detach",
+								{ clear = true }),
 							callback = function(event2)
 								vim.lsp.buf.clear_references()
-								vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+								vim.api.nvim_clear_autocmds({
+									group =
+									"kickstart-lsp-highlight",
+									buffer = event2.buf
+								})
 							end,
 						})
 					end
@@ -345,7 +356,10 @@ require("lazy").setup({
 						and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
 					then
 						map("<leader>th", function()
-							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({
+								bufnr =
+									event.buf
+							}))
 						end, "[T]oggle Inlay [H]ints")
 					end
 				end,
@@ -378,9 +392,11 @@ require("lazy").setup({
 				},
 			})
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+			capabilities = vim.tbl_deep_extend("force", capabilities,
+				require("cmp_nvim_lsp").default_capabilities())
 			local servers = {
 				zls = {},
+				ols = {},
 				-- clangd = {},
 				-- gopls = {},
 				-- pyright = {},
@@ -418,7 +434,8 @@ require("lazy").setup({
 				handlers = {
 					function(server_name)
 						local server = servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities,
+							server.capabilities or {})
 						require("lspconfig")[server_name].setup(server)
 					end,
 				},
@@ -537,7 +554,7 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{ -- You can easily change to a different colorscheme.
+	{              -- You can easily change to a different colorscheme.
 		"folke/tokyonight.nvim",
 		priority = 1000, -- Make sure to load this before all the other start plugins.
 		config = function()
